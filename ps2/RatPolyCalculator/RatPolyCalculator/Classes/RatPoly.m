@@ -260,22 +260,75 @@
  Question 2(a)
  ========
  
- <Your answer here>
+ If self is nil, then a message passed to it returns nil. There is no run-time error. The error handling is graceful.
+ 
+ 
  
  Question 2(b)
  ========
  
- <Your answer here>
+ valueOf is made a class method so that calling it doesn't require a RatNum object. It is like a constructor - constructors
+ should not require an object instance to be fed to it before it does its job.
+ 
+ An alternative is an init instance method: -(id)initWithString:(NSString*)str
  
  Question 2(c)
  ========
  
- <Your answer here>
+ Methods that need to be changed:
+ 
+ 1. checkRep
+ Becomes less complex code-wise. Becomes more efficient execution-wise.
+ checkRep no longer has to check that the RatNum instance is stored in the lowest form.
+ 
+ 2. initWithNumber
+ Becomes less complex code-wise. Becomes more efficient execution-wise.
+ initWithNumber no longer has to compute the lowest form of the rational number used in the argument before storing.
+ 
+ 3. stringValue
+ Becomes more complex code-wise. Becomes less efficient execution-wise.
+ stringValue may need to compute the lowest form of the rational number before it can construct the string to be returned.
+ BUT...
+ Even though stringValue is now slower, the RatNum class can become more efficient:
+ - If stringValue is rarely used because RatNum class is being used at very low-level and does not show itself at the UI level.
+ - If stringValue is called on fewer RatNum objects than there are RatNum objects created with initWithNumber. Previously,
+    initWithNumber forces every RatNum object to have their numerator and denominator stored in lowest form regardless of whether the object will be converted to a string in the future.
+    For e.g. if 200 RatNum objects are instantiated, the original representation invariant could execute 200 lowest form computations. In the
+    weakened representation invariant, reducing self to lowest form is done in stringValue method. This reduction can then be
+    permanently effected in the calling RatNum object.
+ 
+ 4. add,sub,mul,div
+ Becomes less complex code-wise. Becomes more efficient execution-wise.
+ In the weakened representation invariant case, these methods don't need to init the return RatNum object with lowest form.
+ Note that code for reducing a RatNum to lowest form would be in the initWithNumber constructor in the strong rep invariant case.
+ 
+ 5. isEqual
+ Becomes more complex code-wise. Becomes less efficient execution-wise. 
+ isEqual must now reduce both self and argument before comparing self and argument.
+ BUT...
+ Even though isEqual is now slower, the RatNum class can become more efficient:
+ - If isEqual is rarely used.
+ - If isEqual is called on fewer RatNum objects than there are RatNum objects created with initWithNumber. See "3. stringValue" above.
+ 
+ 6. valueOf
+ Becomes less complex code-wise. Becomes more efficient execution-wise.
+ In the weakened representation invariant case, valueOf doesn't need to init the return RatNum object with lowest form.
+ Note that code for reducing a RatNum to lowest form would be in the initWithNumber constructor in the strong rep invariant case.
+ 
  
  Question 2(d)
  ========
  
- <Your answer here>
+ No methods (provided in te skeleton) change numer and denom such that the end result is not in lowest form.
+ 
+ A method can change a RatNum object. For e.g.:
+ 
+ - (void) myfun{
+    numer = 99;
+ }
+ 
+ Instances of RatNum have readonly numer and readonly denom. Numer and Denom can only be changed by methods defined
+ inside the implementation file, not by external functions. For e.g. numer and denom cannot be altered in main.m .
  
  Question 2(e)
  ========
