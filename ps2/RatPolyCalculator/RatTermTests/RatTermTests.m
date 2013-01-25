@@ -150,7 +150,7 @@ RatTerm* term3(int numer, int denom, int expt) {
 	[self testValueOf:@"0" :term(0, 0)];
 }
 -(void)testToString:(NSString*)target :(RatTerm*)actual{
-	STAssertEqualObjects(target, [actual stringValue], @"", @"");
+        STAssertEqualObjects(target, [actual stringValue], @"", @"");
 }
 
 -(void)testToStringSimple{

@@ -135,13 +135,22 @@
         !([self isZero])         &&
         !([self isNaN])          &&
         !([arg isZero])          &&
-        !([arg isZero])              )
+        !([arg isNaN])              )
     {
         [NSException raise:@"RatTerm add error" format:
          @"Exponent mismatch on non-zero, non-NaN arguments."];
     }
     
     RatNum *new_coeff = [self.coeff add:(arg.coeff)];
+    
+    int new_expt;
+    
+    if (expt > arg.expt) {
+        new_expt = expt;
+    }
+    else
+        new_expt = arg.expt;
+    
     return [[RatTerm alloc] initWithCoeff:new_coeff Exp:expt];
 }
 
@@ -202,6 +211,57 @@
     // 
     //          Valid example outputs include "3/2*x^2", "-1/2", "0", and "NaN".
     
+    if ([self isZero]) return @"0";
+    
+    if ([self isNaN]) return @"NaN";
+    
+    NSString *coeffStr;
+    NSString *exptStr;
+    NSString *astericksSign;
+    
+    // Fill up exponent part of the string to be returned.
+    if (self.expt == 1) {
+        exptStr = @"x";
+    }
+    else if (self.expt == 0) {
+        exptStr = @"";
+    }
+    else if (self.expt > 1) {
+        exptStr = [NSString stringWithFormat:@"x^%d", self.expt];
+    }
+    
+    // Fill up coefficient part of the string to be returned.
+    RatNum *one = [[RatNum alloc] initWithInteger:1];
+    RatNum *negOne = [[RatNum alloc] initWithInteger:-1];
+    
+    if ([self.coeff isEqual:negOne] && self.expt == 0) {
+        coeffStr = @"1";
+    }
+    else if ([self.coeff isEqual:one] && self.expt > 0) {
+        coeffStr = @"";
+    }
+    else if ([self.coeff isEqual:negOne] && self.expt == 0) {
+        coeffStr = @"-1";
+    }
+    else if ([self.coeff isEqual:negOne] && self.expt > 0) {
+        coeffStr = @"-";
+    }
+    else {
+        // coeff is not 1
+        coeffStr = [self.coeff stringValue];
+    }
+    
+    // Decide whether astericks sign is needed.
+    if ( [coeffStr isEqualToString:@""] || [coeffStr isEqualToString:@"-"] || [exptStr isEqualToString:@""])
+        astericksSign = @"";
+    else
+        astericksSign = @"*";
+    
+    // return coeffStr + astericksSign+ exptStr
+    NSString *combinedStr;
+    combinedStr = [[coeffStr stringByAppendingString:astericksSign] stringByAppendingString:exptStr];
+    
+    return combinedStr;
     
 }
 
@@ -212,6 +272,22 @@
     //             RatTerm in the form defined in the stringValue method.
     //             Valid inputs include "0", "x", "-5/3*x^3", and "NaN"
     // EFFECTS: returns a RatTerm t such that [t stringValue] = str
+    
+    /* Strategy
+        
+        1) Deduce Exponent
+            1a) If ^ present, then expt > 1
+            1b) If ^ absent and x present, then expt == 1.
+            1c) If ^ absent and x absent, then expt == 0.
+        2) Deduce Coefficient
+            2a) If * present, then substring that precedes * is the coefficient.
+            2b) If * absent and x present, then coeff == 1.
+            2c) If * absent and x absent, then the entire string is the coefficient.
+        3) Construct new RatTerm object with exponent and coefficient. Return.
+    */
+    
+    
+    RatTerm *result = [[RatTerm alloc] initWithCoeff:rdghrdhdg Exp:sdfg];
     
 }
 
