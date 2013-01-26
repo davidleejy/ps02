@@ -151,7 +151,7 @@
     else
         new_expt = arg.expt;
     
-    return [[RatTerm alloc] initWithCoeff:new_coeff Exp:expt];
+    return [[RatTerm alloc] initWithCoeff:new_coeff Exp:new_expt];
 }
 
 
@@ -286,18 +286,21 @@
         3) Construct new RatTerm object with exponent and coefficient. Return.
     */
     
-    int expt;
+    
     
     // Extract expt.
-    NSRange range = [str rangeOfString @"x"];
+    
+    int expt;
+    NSRange range = [str rangeOfString: @"x"];
+    
     if (range.location == NSNotFound) {
         // x absent
         expt = 0;
     }
     else { // x present
-        if( [[str substringWithRange:NSMakeRange((range.location+1), 1)] isEqualToString: @"^"]) {
+        if( [str rangeOfString: @"^"].location != NSNotFound) {
             // ^ present
-            NSString *temp = [str substringFromIndex:range.location+2 ];
+            NSString *temp = [str substringFromIndex:((range.location)+2) ];
             expt = [temp intValue];
         }
         else { // ^ absent
@@ -305,21 +308,33 @@
         }
     }
     
+    
     // Extract coefficient.
-    NSString *coeffStr;
-    NSString *temp;
+    
+    NSMutableString *coeffStr = [[NSMutableString alloc] initWithString:@""];
+    NSString *temp = @"";
     
     const char *c_style_str = [str cStringUsingEncoding:NSUTF8StringEncoding]; // convert NSString string to C-Style string.
     
     for(int i=0;
         c_style_str[i]!='*' && c_style_str[i]!='x' && i<str.length;
         i++) {
-        
-        temp = [NSString stringWithCString:c_style_str encoding:NSUTF8StringEncoding]; // convert C-style string to NSString.
-        coeffStr = [coeffStr stringByAppendingString: temp];
+        temp = [str substringWithRange:NSMakeRange(i, 1)];
+        [coeffStr appendString: temp];
     }
+    
     // Build coeff from the string representation extracted.
-    RatNum *coeff = [RatNum valueof:coeffStr];
+    
+    // Check for "special cases"
+    if ([coeffStr isEqualToString:@"-"]) {
+        coeffStr = (NSMutableString*)@"-1";
+    }
+    if ([coeffStr length] == 0) {
+        coeffStr = (NSMutableString*)@"1";
+    }
+    
+    RatNum *coeff = [RatNum valueOf:coeffStr];
+    NSLog(@"coeffStr:%@",coeffStr);
     
     // Combine coeff and expt to build RatTerm object to be returned.
     RatTerm *result = [[RatTerm alloc] initWithCoeff:coeff Exp:expt];
