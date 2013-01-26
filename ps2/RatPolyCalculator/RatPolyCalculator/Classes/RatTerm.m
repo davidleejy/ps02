@@ -338,7 +338,6 @@
     }
     
     RatNum *coeff = [RatNum valueOf:coeffStr];
-    NSLog(@"coeffStr:%@",coeffStr);
     
     // Combine coeff and expt to build RatTerm object to be returned.
     RatTerm *result = [[RatTerm alloc] initWithCoeff:coeff Exp:expt];
