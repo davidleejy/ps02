@@ -286,9 +286,44 @@
         3) Construct new RatTerm object with exponent and coefficient. Return.
     */
     
+    int expt;
     
-    RatTerm *result = [[RatTerm alloc] initWithCoeff:rdghrdhdg Exp:sdfg];
+    // Extract expt.
+    NSRange range = [str rangeOfString @"x"];
+    if (range.location == NSNotFound) {
+        // x absent
+        expt = 0;
+    }
+    else { // x present
+        if( [[str substringWithRange:NSMakeRange((range.location+1), 1)] isEqualToString: @"^"]) {
+            // ^ present
+            NSString *temp = [str substringFromIndex:range.location+2 ];
+            expt = [temp intValue];
+        }
+        else { // ^ absent
+            expt = 1;
+        }
+    }
     
+    // Extract coefficient.
+    NSString *coeffStr;
+    NSString *temp;
+    
+    const char *c_style_str = [str cStringUsingEncoding:NSUTF8StringEncoding]; // convert NSString string to C-Style string.
+    
+    for(int i=0;
+        c_style_str[i]!='*' && c_style_str[i]!='x' && i<str.length;
+        i++) {
+        
+        temp = [NSString stringWithCString:c_style_str encoding:NSUTF8StringEncoding]; // convert C-style string to NSString.
+        coeffStr = [coeffStr stringByAppendingString: temp];
+    }
+    // Build coeff from the string representation extracted.
+    RatNum *coeff = [RatNum valueof:coeffStr];
+    
+    // Combine coeff and expt to build RatTerm object to be returned.
+    RatTerm *result = [[RatTerm alloc] initWithCoeff:coeff Exp:expt];
+    return result;
 }
 
 //  Equality test,
