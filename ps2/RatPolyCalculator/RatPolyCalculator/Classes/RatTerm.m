@@ -286,7 +286,11 @@
         3) Construct new RatTerm object with exponent and coefficient. Return.
     */
     
-    
+    // Check for NaN
+    if ([str isEqualToString:@"NaN"]) {
+        RatTerm *result = [RatTerm initNaN];
+        return result;
+    }
     
     // Extract expt.
     

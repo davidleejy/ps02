@@ -333,27 +333,52 @@
  Question 2(e)
  ========
  
- <Your answer here>
+ <Your answer here> Unable to find question 2e.
  
  Question 3(a)
  ========
  
- <Your answer here>
+ At the end of constructors. The representation invariant is not violated by calling any instance/class methods.
+ There is no need to check after/before every instance/class method.
  
  Question 3(b)
  ========
  
- <Your answer here>
+ 1. checkRep
+ Less complex in code clarity.
+ More efficient in execution.
+ Because checkRep has one less condition to check thanks to the weakened representation invariant.
+ 
+ 2. stringValue
+ More complex in code clarity.
+ Because when extracting a string that is representative of the exponent, the code has to ensure that coefficient != 0.
  
  Question 3(c)
  ========
  
- <Your answer here>
+ 1. checkRep
+ More complex in code clarity.
+ Less efficient in execution.
+ Changes: add in a block of code to check the add-in invariant:
+ Because checkRep has added code to check for the new restriction.
+ 
+ 2. initWithCoeff:Exp:
+ Slightly more complex in code clarity.
+ Slightly less efficient in execution.
+ Because when coeff is NaN, expt has to be set to 0.
+ 
+ Note:
+ initNaN doesn't change because initNaN: calls initWithCoeff:Exp: for constructing a new RatTerm object.
  
  Question 3(d)
  ========
  
- <Your answer here>
+ I prefer having both invariants. Having both these invariants can help keep the internal representation of the class neat.
+ Neat internal representations are easier to extend and build on. Developers who are new to this class will have a gentler learning curve.
+ 
+ However, the flexibility of this class is decreased.
+ For example, this class cannot store a NaN*x^74 term. But this inflexibility is justified by the rare occurrence of someone
+ trying to store a NaN coeff with a non-zero exponent.
  
  Question 5: Reflection (Bonus Question)
  ==========================
