@@ -44,30 +44,6 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
 @synthesize terms = _terms;
 
 
-
-
-//TODO
-+(void)doNotUseMe {
-    
-//    NSMutableArray* rTArr = [[NSMutableArray alloc] init];
-//    [rTArr addObject:term3(3,4,2)];
-//    [rTArr addObject:term3(3,4,4)];
-//    [rTArr addObject:term3(3,4,7)];
-//    [rTArr addObject:term3(3,4,9)];
-//    
-//    NSLog(@"size is %ld",[rTArr count]);
-//    
-//    for(int i= 0;i<10;i++){
-//        NSLog(@"expt %d is at index %d\n", i, [RatPoly indexOf1stRatTermIn:rTArr WithExpt:i]);
-//    }
-    
-    
-    
-    
-    
-}
-
-
 // Note that since there is no variable called "degree" in our class,the compiler won't synthesize 
 // the "getter" for "degree". and we have to write our own getter
 -(int)degree{ // 5 points
@@ -246,6 +222,26 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
     //  Create a new RatPoly object with NSMUtableArray.
     //  Check for NaN.
     
+    // Special Case: A polynomial is NaN.
+    if ([self isNaN]) {
+        return [[RatPoly alloc] initWithTerm:[RatTerm initNaN]];
+    }
+    
+    if ([p isNaN]) {
+        return [[RatPoly alloc] initWithTerm:[RatTerm initNaN]];
+    }
+    
+    // Check for special case: either self or p is zero polynomial.
+    if ([self isZeroPoly])
+        return [RatPoly initWithRatPoly:p];
+    
+    if ([p isZeroPoly]) {
+        return [RatPoly initWithRatPoly:self];
+    }
+    
+    NSLog(@"p poly in add: %@",[p stringValue]);
+    NSLog(@"self poly in add: %@",[self stringValue]);
+    
     // init indices
     int i = 0;
     int j = 0;
@@ -269,7 +265,13 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
         
         if (selfRatTermExpt == pRatTermExpt) {
             RatTerm* summedTerm = [selfRatTerm add:pRatTerm];
-            [newPolySum addObject:summedTerm];
+            NSLog(@"selfratterm: %@", [selfRatTerm stringValue]);
+            NSLog(@"pratterm: %@", [pRatTerm stringValue]);
+            NSLog(@"summedterm: %@", [summedTerm stringValue]);
+            
+            // Do not add zero terms - it messes up the order of the array used to make a RatPoly.
+            if (![summedTerm isZero])
+                [newPolySum addObject:summedTerm];
             
             i++;
             j++;
@@ -284,19 +286,23 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
             
             j++;
         }
-    }
+    } //end while()
     
     
     //  After the traversal ends, check whether both polynomials have been traversed to the
     //  last terms. Insert the untraversed terms of the polynomial into NSMUtableArray.
     
+    for (int i =0 ; i<[newPolySum count]; i++) {
+        NSLog(@"newPolySum[%d] = %@",i,[[newPolySum objectAtIndex:i]stringValue]);
+    }
+    
     RatPoly *result;
     
-    if (i == selfTermsSize-1 && j == pTermsSize-1) {
+    if (i == selfTermsSize && j == pTermsSize) {
         // Both polynomials have been fully traversed.
         result = [[RatPoly alloc] initWithTerms:newPolySum];
     }
-    else if ( i < selfTermsSize-1 && j == pTermsSize-1) {
+    else if ( i < selfTermsSize && j == pTermsSize) {
         // self polynomial still has remaining terms.
         for (int x = i; x < selfTermsSize; x++) {
             selfRatTerm = [_terms objectAtIndex:x];
@@ -305,23 +311,17 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
         // Both polynomials have been fully traversed now.
         result = [[RatPoly alloc] initWithTerms:newPolySum];
     }
-    else if (i == selfTermsSize-1 && j < pTermsSize-1) {
+    else if (i == selfTermsSize && j < pTermsSize) {
         // p polynomial still has remaining terms.
-        for (int x = j; x < selfTermsSize; x++) {
-            pRatTerm = [_terms objectAtIndex:x];
+        for (int x = j; x < pTermsSize; x++) {
+            pRatTerm = [[p terms] objectAtIndex:x];
             [newPolySum addObject:pRatTerm];
         }
         // Both polynomials have been fully traversed now.
         result = [[RatPoly alloc] initWithTerms:newPolySum];
     }
-    
-    // Check whether result polynomial is NaN.
-    if ([result isNaN]) {
-        result = [[RatPoly alloc] initWithTerm:[RatTerm initNaN]];
-    }
-    
+    NSLog(@"add result: %@", [result stringValue]);
     return result;
-    
 }
 
 // Subtraction operation
@@ -355,8 +355,10 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
     
     NSMutableArray *arrayOfRatTermArrays = [NSMutableArray array];
     NSMutableArray *singleRatTermArray = [[NSMutableArray alloc]init];
-    int selfTermsSize = [_terms count];
-    int pTermsSize = [[p terms] count];
+    NSUInteger selfTermsSize = [_terms count];
+    NSUInteger pTermsSize = [[p terms] count];
+    NSLog(@"self terms count = %ld",selfTermsSize);
+    NSLog(@"p terms count = %ld", pTermsSize);
     RatTerm* selfRatTerm;
     RatTerm* pRatTerm;
     
@@ -367,6 +369,7 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
         for (int j=0; j<pTermsSize; j++) {
             pRatTerm = [[p terms] objectAtIndex:j];
             RatTerm* muledRatTerm = [selfRatTerm mul:pRatTerm];
+            NSLog(@"muledratterm: %@",[muledRatTerm stringValue]);
             [singleRatTermArray addObject:muledRatTerm];
         }
         
@@ -379,9 +382,11 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
     RatPoly* result = [[RatPoly alloc] init];
     RatPoly* temp;
     
+    
     for (int x=0; x<[arrayOfRatTermArrays count]; x++) {
         temp = [[RatPoly alloc] initWithTerms:[arrayOfRatTermArrays objectAtIndex:x]];
         result = [result add:temp];
+        NSLog(@"result= %@",[result stringValue]);
     }
     
     return result;
@@ -448,16 +453,28 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
     
     RatPoly* nPoly = [RatPoly initWithRatPoly:self];
     RatPoly* dPoly = [RatPoly initWithRatPoly:p];
+    NSLog(@"npoly is %@",[nPoly stringValue]);
+    NSLog(@"dpoly is %@", [dPoly stringValue]);
     NSMutableArray* quotientRatTerms = [[NSMutableArray alloc]init];
     
     while ([nPoly degree] >= [dPoly degree]) {
         RatTerm* nHighestDegRatTerm = [nPoly highestDegreeRatTerm];
+        NSLog(@"nhighestdegRT is %@", [nHighestDegRatTerm stringValue]);
         RatTerm* dHighestDegRatTerm = [dPoly highestDegreeRatTerm];
+        NSLog(@"dhighestdegrt is %@", [dHighestDegRatTerm stringValue]);
         RatTerm* dividedRatTerm = [nHighestDegRatTerm div:dHighestDegRatTerm];
+        NSLog(@"dividedRT is %@", [dividedRatTerm stringValue]);
         [quotientRatTerms addObject:dividedRatTerm];
+        
         RatPoly* temp = [[RatPoly alloc] initWithTerm:dividedRatTerm];
+        NSLog(@"temp is %@",[temp stringValue]);
         temp = [temp mul:dPoly];
+        NSLog(@"temp after mulling is %@",[temp stringValue]);
         nPoly = [nPoly sub: temp];
+        NSLog(@"npoly after sub temp is %@",[nPoly stringValue]);
+        if ([nPoly isZeroPoly]) { //no remainder case
+            break;
+        }
     }
     
     return [[RatPoly alloc] initWithTerms:quotientRatTerms];
@@ -519,13 +536,27 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
     
     
     NSMutableString* result = [[NSMutableString alloc] initWithString:@""];
+    BOOL handlingFirstRatTerm = YES;
     
     for (int i=0; i<[_terms count]; i++) {
+        
         RatTerm* currRatTerm = [_terms objectAtIndex:i];
-        NSString* currRatTermStr = [currRatTerm stringValue];
+        NSMutableString* currRatTermStr = [[NSMutableString alloc] init];
+        
+        if (!handlingFirstRatTerm) {
+            if ([[currRatTerm coeff] isPositive])
+                currRatTermStr = [[NSMutableString alloc] initWithString:@"+"];
+        }
+        
+        
+        [currRatTermStr appendString:[currRatTerm stringValue]];
+        NSLog(@"%@\n",currRatTermStr);
         [result appendString:currRatTermStr];
+        NSLog(@"%@\n",result);
+        
+        handlingFirstRatTerm = NO;
     }
-    
+    NSLog(@"%@\n",[NSString stringWithString:result]);
     return [NSString stringWithString:result];
 }
 
@@ -563,43 +594,58 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
     }
     else {
         NSMutableString* temp = [[NSMutableString alloc] initWithString:inputStr];
-        inputStr = [[NSMutableString alloc] initWithString:@"-"];
+        inputStr = [[NSMutableString alloc] initWithString:@"+"];
         [inputStr appendString:temp];
     }
     
+    NSLog(@"inputstr: %@\n",inputStr);
     
     // Extract RatTerms and insert into RatTerms array.
+    BOOL tacklingFirstRatTerm = YES;
+    
     while ([inputStr length] != 0) {
         BOOL firstCharIsMinusSymbol = [[inputStr substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"-"];
         BOOL firstCharIsPlusSymbol = [[inputStr substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"+"];
-        BOOL tacklingFirstRatTerm = [inputStr length] == [str length];
+        
         NSString *firstChar = [inputStr substringWithRange:NSMakeRange(0, 1)];
         
         if (firstCharIsPlusSymbol) {
             
             if (!tacklingFirstRatTerm) {
+                
                 // Convert singleRatTermStr into RatTerm obj.
                 RatTerm* temp = [RatTerm valueOf:singleRatTermStr];
                 
                 // Insert RatTerm obj into RatTermArr.
                 [RatTermArr addObject:temp];
                 
+                NSLog(@"inputstr: %@\n",singleRatTermStr);
+                NSLog(@"inputstr: %@\n",temp);
+                
                 //reset singleRatTermStr
                 [singleRatTermStr setString:@""];
+                
+                
             }
             
         }
         else if (firstCharIsMinusSymbol) {
             
             if (!tacklingFirstRatTerm) {
+                
                 // Convert singleRatTermStr into RatTerm obj.
                 RatTerm* temp = [RatTerm valueOf:singleRatTermStr];
                 
                 // Insert RatTerm obj into RatTermArr.
                 [RatTermArr addObject:temp];
                 
+                
+                NSLog(@"inputstr: %@\n",singleRatTermStr);
+                NSLog(@"inputstr: %@\n",temp);
+                
                 //reset singleRatTermStr
                 [singleRatTermStr setString:@""];
+                
             }
             
             [singleRatTermStr appendString:firstChar];
@@ -608,10 +654,22 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
             [singleRatTermStr appendString:firstChar];
         }
         
-        //NSString *result = [baseString stringByReplacingCharactersInRange:range withString:@""];
-        NSString *immutableInputStr;
-        immutableInputStr = [inputStr stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:@""];
+        // remove first character of input str
+        NSString *immutableInputStr = [inputStr stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:@""];
         inputStr = [[NSMutableString alloc] initWithString:immutableInputStr];
+        
+        // no longer tackling first Rat Term
+        tacklingFirstRatTerm = NO;
+        
+        // handling the last rat term
+        if ([inputStr length] == 0) {
+            
+            // Convert singleRatTermStr into RatTerm obj.
+            RatTerm* temp = [RatTerm valueOf:singleRatTermStr];
+            
+            // Insert RatTerm obj into RatTermArr.
+            [RatTermArr addObject:temp];
+        }
         
     } //end while()
     

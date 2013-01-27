@@ -9,7 +9,7 @@
 #import "RatTerm.h"
 
 @interface RatPoly : NSObject {
-    
+    NSArray* terms;
 // Definitions:
 // For a RatPoly p, let C(p,i) be
 //   [[[p terms] objectAtIndex:i] coeff] and
@@ -49,8 +49,6 @@
 @property (readonly) NSArray* terms;
 @property (readonly) int degree;
 
-
-+(void)doNotUseMe; //TODO
 
 -(id)init;
   //EFFECTS: constructs a polynomial with zero terms, which is effectively the zero polynomial
