@@ -488,6 +488,7 @@ RatTerm* ratTerm3(int numer, int denom, int expt);
     //            if [self isNaN], return NaN
     
     if ([self isNaN]) return NAN;
+    if (d == NAN) return NAN;
     
     NSUInteger selfTermsSize = [_terms count];
     double sumOfEvaluatedRatTerms = 0;

@@ -73,11 +73,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "RatPolyCalculator/Classes/RatPoly.m"
-         timestampString = "380965345.292278"
+         timestampString = "380966499.057567"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "601"
-         endingLineNumber = "601"
+         startingLineNumber = "602"
+         endingLineNumber = "602"
          landmarkName = "+valueOf:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -86,11 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "RatPolyCalculator/Classes/RatPoly.m"
-         timestampString = "380965345.292278"
+         timestampString = "380966499.057567"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "656"
-         endingLineNumber = "656"
+         startingLineNumber = "657"
+         endingLineNumber = "657"
          landmarkName = "+valueOf:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -99,11 +99,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "RatPolyCalculator/Classes/RatPoly.m"
-         timestampString = "380965345.292278"
+         timestampString = "380966499.057567"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "668"
-         endingLineNumber = "668"
+         startingLineNumber = "669"
+         endingLineNumber = "669"
          landmarkName = "+valueOf:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -112,11 +112,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "RatPolyCalculator/Classes/RatPoly.m"
-         timestampString = "380965345.292278"
+         timestampString = "380966499.057567"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "546"
-         endingLineNumber = "546"
+         startingLineNumber = "547"
+         endingLineNumber = "547"
          landmarkName = "-stringValue"
          landmarkType = "5">
       </FileBreakpoint>
