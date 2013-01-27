@@ -59,7 +59,7 @@
 		060AC93716A3FF30008FAD74 /* RatNum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RatNum.h; sourceTree = "<group>"; };
 		060AC93816A3FF30008FAD74 /* RatNum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RatNum.m; sourceTree = "<group>"; };
 		060AC93916A3FF30008FAD74 /* RatPoly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RatPoly.h; sourceTree = "<group>"; };
-		060AC93A16A3FF30008FAD74 /* RatPoly.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RatPoly.m; sourceTree = "<group>"; };
+		060AC93A16A3FF30008FAD74 /* RatPoly.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RatPoly.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		060AC93B16A3FF30008FAD74 /* RatTerm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RatTerm.h; sourceTree = "<group>"; };
 		060AC93C16A3FF30008FAD74 /* RatTerm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RatTerm.m; sourceTree = "<group>"; };
 		060AC94A16A40180008FAD74 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
